@@ -1,4 +1,18 @@
-﻿using System;
+﻿// Copyright (c) Microsoft. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+/*============================================================
+**
+**
+**
+** Purpose: Convenient wrapper for a string, an offset, and
+**          a count.  Ideally used in streams, collections,
+**          and parsers.
+**
+**
+===========================================================*/
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -11,7 +25,9 @@ namespace System
     /// <summary>
     /// 
     /// </summary>
-    public struct Substring // : IEnumerable, IEnumerable<char>, IReadOnlyCollection<char>, IReadOnlyList<char>, IEquatable<string>, IEquatable<substring>, IComparable<string>, IComparable<substring>, IStructuralComparable
+    public struct Substring : IEquatable<Substring>, IComparable<Substring>
+        // IEquatable<string>, IComparable<string>, IStructuralComparable
+        // : IEnumerable, IEnumerable<char>, IReadOnlyCollection<char>, IReadOnlyList<char>
     {
         #region Fields
 
@@ -68,15 +84,15 @@ namespace System
             }
             else if (offset < 0)
             {
-                throw new ArgumentOutOfRangeException("offset", "The argument value cannot be negative.");
+                throw new ArgumentOutOfRangeException("offset", Environment.GetResourceString("ArgumentOutOfRange_NeedNonNegNum"));
             }
             else if (count < 0)
             {
-                throw new ArgumentOutOfRangeException("count", "The argument value cannot be negative.");
+                throw new ArgumentOutOfRangeException("count", Environment.GetResourceString("ArgumentOutOfRange_NeedNonNegNum"));
             }
             else if (str.Length - offset < count)
             {
-                throw new ArgumentException("The count is too large for the given offset and length of the string.");
+                throw new ArgumentException(Environment.GetResourceString("Argument_InvalidOffLenStr"));
             }
             Contract.EndContractBlock();
 
@@ -99,10 +115,9 @@ namespace System
         {
             get
             {
-                // Contracts
                 if (m_string == null)
                 {
-                    throw new InvalidOperationException("The underlying string is null.");
+                    throw new InvalidOperationException(Environment.GetResourceString("InvalidOperation_NullString"));
                 }
                 else if (index < 0 || index >= m_count)
                 {
@@ -121,8 +136,17 @@ namespace System
         {
             get
             {
-                // Contracts
+                // Since copying value types is not atomic & callers cannot atomically 
+                // read all three fields, we cannot guarantee that Count is within 
+                // the bounds of String.  That's our intent, but let's not specify 
+                // it as a postcondition - force callers to re-verify this themselves
+                // after reading each field out of a Substring into their stack.
                 Contract.Ensures(Contract.Result<int>() >= 0);
+                Contract.EndContractBlock();
+
+                Contract.Assert((null == m_string && 0 == m_offset && 0 == m_count)
+                                 || (null != m_string && m_offset >= 0 && m_count >= 0 && m_offset + m_count <= m_string.Length),
+                                "Substring is invalid");
 
                 return m_count;
             }
@@ -143,8 +167,17 @@ namespace System
         {
             get
             {
-                // Contracts
+                // Since copying value types is not atomic & callers cannot atomically 
+                // read all three fields, we cannot guarantee that Offset is within 
+                // the bounds of String.  That is our intent, but let's not specify 
+                // it as a postcondition - force callers to re-verify this themselves
+                // after reading each field out of a Substring into their stack.
                 Contract.Ensures(Contract.Result<int>() >= 0);
+                Contract.EndContractBlock();
+
+                Contract.Assert((null == m_string && 0 == m_offset && 0 == m_count)
+                                 || (null != m_string && m_offset >= 0 && m_count >= 0 && m_offset + m_count <= m_string.Length),
+                                "Substring is invalid");
 
                 return m_offset;
             }
@@ -157,8 +190,9 @@ namespace System
         {
             get
             {
-                // Contracts
-                // TODO
+                Contract.Assert((null == m_string && 0 == m_offset && 0 == m_count)
+                                 || (null != m_string && m_offset >= 0 && m_count >= 0 && m_offset + m_count <= m_string.Length),
+                                "Substring is invalid");
 
                 return m_string;
             }
@@ -176,6 +210,16 @@ namespace System
         public int Compare(Substring other)
         {
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Alias for <see cref="Compare(Substring)"/>.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public int CompareTo(Substring other)
+        {
+            return Compare(other);
         }
 
         /// <summary>
@@ -208,17 +252,19 @@ namespace System
 
         public override bool Equals(object obj)
         {
-            throw new NotImplementedException();
+            return (obj is Substring) ? Equals((Substring)obj) : false;
         }
 
         public bool Equals(Substring other)
         {
-            throw new NotImplementedException();
+            // TODO OPT : When comparing the strings, only compare the sections spanned by the substrings.
+            return other.m_offset == m_offset && other.m_count == m_count && other.m_string == m_string;
         }
 
         public bool Equals(Substring other, StringComparer comparer)
         {
-            throw new NotImplementedException();
+            // TODO OPT : When comparing the strings, only compare the sections spanned by the substrings.
+            return other.m_offset == m_offset && other.m_count == m_count && comparer.Equals(other.m_string, m_string);
         }
 
         public override int GetHashCode()
@@ -235,6 +281,12 @@ namespace System
         [Pure]
         public int IndexOf(char value)
         {
+            if (m_string == null)
+            {
+                throw new InvalidOperationException(Environment.GetResourceString("InvalidOperation_NullString"));
+            }
+            Contract.EndContractBlock();
+
             return IndexOf(value, 0);
         }
 
@@ -251,14 +303,17 @@ namespace System
         [Pure]
         public int IndexOf(char value, int startIndex)
         {
-            // Contracts
-            if (startIndex < 0)
+            if (m_string == null)
             {
-                throw new ArgumentOutOfRangeException("startIndex", "The index is negative.");
+                throw new InvalidOperationException(Environment.GetResourceString("InvalidOperation_NullString"));
+            }
+            else if (startIndex < 0)
+            {
+                throw new ArgumentOutOfRangeException("startIndex", Environment.GetResourceString("ArgumentOutOfRange_NeedNonNegNum"));
             }
             else if (!this.IsEmpty && startIndex >= this.Count)
             {
-                throw new ArgumentOutOfRangeException("startIndex", "The index is outside the bounds of the substring.");
+                throw new ArgumentOutOfRangeException("startIndex", Environment.GetResourceString("Argument_InvalidOffLenStr"));
             }
             Contract.Ensures(Contract.Result<int>() >= -1);
             Contract.Ensures(Contract.Result<int>() < this.Count);
@@ -286,7 +341,10 @@ namespace System
         [Pure]
         public int LastIndexOf(char value)
         {
-            // Contracts
+            if (m_string == null)
+            {
+                throw new InvalidOperationException(Environment.GetResourceString("InvalidOperation_NullString"));
+            }
             Contract.Ensures(Contract.Result<int>() >= -1);
             Contract.Ensures(Contract.Result<int>() < this.Count);
             Contract.EndContractBlock();
@@ -310,14 +368,17 @@ namespace System
         [Pure]
         public int LastIndexOf(char value, int startIndex)
         {
-            // Contracts
-            if (startIndex < 0)
+            if (m_string == null)
             {
-                throw new ArgumentOutOfRangeException("startIndex", "The index is negative.");
+                throw new InvalidOperationException(Environment.GetResourceString("InvalidOperation_NullString"));
+            }
+            else if (startIndex < 0)
+            {
+                throw new ArgumentOutOfRangeException("startIndex", Environment.GetResourceString("ArgumentOutOfRange_NeedNonNegNum"));
             }
             else if (!this.IsEmpty && startIndex >= this.Count)
             {
-                throw new ArgumentOutOfRangeException("startIndex", "The index is outside the bounds of the substring.");
+                throw new ArgumentOutOfRangeException("startIndex", Environment.GetResourceString("Argument_InvalidOffLenStr"));
             }
             Contract.Ensures(Contract.Result<int>() >= -1);
             Contract.Ensures(Contract.Result<int>() < this.Count);
@@ -347,8 +408,11 @@ namespace System
         [Pure]
         public bool StartsWith(string value)
         {
-            // Contracts
-            if (value == null)
+            if (m_string == null)
+            {
+                throw new InvalidOperationException(Environment.GetResourceString("InvalidOperation_NullString"));
+            }
+            else if (value == null)
             {
                 throw new ArgumentNullException("value");
             }
@@ -365,6 +429,12 @@ namespace System
         [Pure]
         public bool StartsWith(Substring value)
         {
+            if (m_string == null)
+            {
+                throw new InvalidOperationException(Environment.GetResourceString("InvalidOperation_NullString"));
+            }
+            Contract.EndContractBlock();
+
             //
             throw new NotImplementedException();
         }
@@ -389,8 +459,11 @@ namespace System
         [Pure]
         public bool StartsWith(string value, StringComparison comparisonType)
         {
-            // Contracts
-            if (value == null)
+            if (m_string == null)
+            {
+                throw new InvalidOperationException(Environment.GetResourceString("InvalidOperation_NullString"));
+            } 
+            else if (value == null)
             {
                 throw new ArgumentNullException("value");
             }
@@ -424,8 +497,11 @@ namespace System
         [Pure]
         public bool StartsWith(Substring value, StringComparison comparisonType)
         {
-            // Contracts
-            if (value.String == null)
+            if (m_string == null)
+            {
+                throw new InvalidOperationException(Environment.GetResourceString("InvalidOperation_NullString"));
+            }
+            else if (value.String == null)
             {
                 throw new ArgumentException("The substring is backed by a null string.", "value");
             }
@@ -469,8 +545,11 @@ namespace System
         [Pure]
         public bool StartsWith(string value, bool ignoreCase, CultureInfo culture)
         {
-            // Contracts
-            if (value == null)
+            if (m_string == null)
+            {
+                throw new InvalidOperationException(Environment.GetResourceString("InvalidOperation_NullString"));
+            }
+            else if (value == null)
             {
                 throw new ArgumentNullException("value");
             }
@@ -502,8 +581,11 @@ namespace System
         [Pure]
         public bool StartsWith(Substring value, bool ignoreCase, CultureInfo culture)
         {
-            // Contracts
-            if (value.String == null)
+            if (m_string == null)
+            {
+                throw new InvalidOperationException(Environment.GetResourceString("InvalidOperation_NullString"));
+            } 
+            else if (value.String == null)
             {
                 throw new ArgumentException("The substring is backed by a null string.", "value");
             }
@@ -529,6 +611,12 @@ namespace System
         /// <returns></returns>
         public char[] ToCharArray()
         {
+            if (m_string == null)
+            {
+                throw new InvalidOperationException(Environment.GetResourceString("InvalidOperation_NullString"));
+            }
+            Contract.EndContractBlock();
+
             // OPT : If this substring is empty, return an empty array.
             if (this.IsEmpty) { return new char[] { }; }
 
@@ -547,6 +635,12 @@ namespace System
 
         public override string ToString()
         {
+            if (m_string == null)
+            {
+                throw new InvalidOperationException(Environment.GetResourceString("InvalidOperation_NullString"));
+            }
+            Contract.EndContractBlock();
+
             // OPT : If the substring is empty, immediately return an empty string.
             if (this.IsEmpty) { return String.Empty; }
  
@@ -563,6 +657,12 @@ namespace System
         /// <returns></returns>
         public bool TryRead(out char value, out Substring remaining)
         {
+            if (m_string == null)
+            {
+                throw new InvalidOperationException(Environment.GetResourceString("InvalidOperation_NullString"));
+            }
+            Contract.EndContractBlock();
+
             // If the string is empty, assign default/empty values to the out parameters and return false.
             if (this.IsEmpty)
             {
