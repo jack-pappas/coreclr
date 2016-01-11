@@ -538,13 +538,91 @@ namespace System {
 
         public static Attribute GetCustomAttribute(MemberInfo element, Type attributeType, bool inherit)
         {
-            Attribute[] attrib = GetCustomAttributes(element, attributeType, inherit);
+            if (element == null)
+                throw new ArgumentNullException("element");
 
-            if (attrib == null || attrib.Length == 0)
-                return null;
+            if (attributeType == null)
+                throw new ArgumentNullException("type");
 
-            if (attrib.Length == 1)
-                return attrib[0];
+            if (!attributeType.IsSubclassOf(typeof(Attribute)) && attributeType != typeof(Attribute))
+                throw new ArgumentException(Environment.GetResourceString("Argument_MustHaveAttributeBaseClass"));
+            Contract.EndContractBlock();
+
+            // Returns an Attribute of base class/inteface attributeType on the Module or null if none exists.
+            // throws an AmbiguousMatchException if there are more than one defined.
+            // If the member is an instance of an internal "runtime" class, use a specialized internal
+            // implementation which minimizes allocations.
+            RuntimeConstructorInfo ctorRT;
+            RuntimeFieldInfo fieldRT;
+            RuntimeMethodInfo methodRT;
+            RuntimePropertyInfo propRT;
+            RuntimeType typeRT;
+
+            if ((typeRT = element as RuntimeType) != null)
+            {
+                object attr;
+                var attrInstanceCount = typeRT.GetCustomAttribute(attributeType, inherit, out attr);
+
+                if (attrInstanceCount == 0)
+                    return null;
+                else if (attrInstanceCount == 1)
+                    return (Attribute)attr;
+                // else, fall through and throw an AmbiguousMatchException
+            }
+            else if ((propRT = element as RuntimePropertyInfo) != null)
+            {
+                object attr;
+                var attrInstanceCount = propRT.GetCustomAttribute(attributeType, inherit, out attr);
+
+                if (attrInstanceCount == 0)
+                    return null;
+                else if (attrInstanceCount == 1)
+                    return (Attribute)attr;
+                // else, fall through and throw an AmbiguousMatchException
+            }
+            else if ((fieldRT = element as RuntimeFieldInfo) != null)
+            {
+                object attr;
+                var attrInstanceCount = fieldRT.GetCustomAttribute(attributeType, inherit, out attr);
+
+                if (attrInstanceCount == 0)
+                    return null;
+                else if (attrInstanceCount == 1)
+                    return (Attribute)attr;
+                // else, fall through and throw an AmbiguousMatchException
+            }
+            else if ((methodRT = element as RuntimeMethodInfo) != null)
+            {
+                object attr;
+                var attrInstanceCount = methodRT.GetCustomAttribute(attributeType, inherit, out attr);
+
+                if (attrInstanceCount == 0)
+                    return null;
+                else if (attrInstanceCount == 1)
+                    return (Attribute)attr;
+                // else, fall through and throw an AmbiguousMatchException
+            }
+            else if ((ctorRT = element as RuntimeConstructorInfo) != null)
+            {
+                object attr;
+                var attrInstanceCount = ctorRT.GetCustomAttribute(attributeType, inherit, out attr);
+
+                if (attrInstanceCount == 0)
+                    return null;
+                else if (attrInstanceCount == 1)
+                    return (Attribute)attr;
+                // else, fall through and throw an AmbiguousMatchException
+            }
+            else
+            {
+                Attribute[] attrib = GetCustomAttributes(element, attributeType, inherit);
+
+                if (attrib == null || attrib.Length == 0)
+                    return null;
+
+                if (attrib.Length == 1)
+                    return attrib[0];
+            }
 
             throw new AmbiguousMatchException(Environment.GetResourceString("RFLCT.AmbigCust"));
         }
@@ -646,18 +724,46 @@ namespace System {
 
         public static Attribute GetCustomAttribute(ParameterInfo element, Type attributeType, bool inherit)
         {
+            if (element == null)
+                throw new ArgumentNullException("element");
+
+            if (attributeType == null)
+                throw new ArgumentNullException("attributeType");
+
+            if (!attributeType.IsSubclassOf(typeof(Attribute)) && attributeType != typeof(Attribute))
+                throw new ArgumentException(Environment.GetResourceString("Argument_MustHaveAttributeBaseClass"));
+
+            if (element.Member == null)
+                throw new ArgumentException(Environment.GetResourceString("Argument_InvalidParameterInfo"), "element");
+
+            Contract.EndContractBlock();
+
             // Returns an Attribute of base class/inteface attributeType on the ParameterInfo or null if none exists.
             // throws an AmbiguousMatchException if there are more than one defined.
-            Attribute[] attrib = GetCustomAttributes(element, attributeType, inherit);
+            // If the element is an instance of RuntimeParameterInfo, use a specialized internal implementation
+            // which minimizes allocations.
+            var elementRT = element as RuntimeParameterInfo;
+            if (elementRT != null)
+            {
+                object attr;
+                var attrInstanceCount = elementRT.GetCustomAttribute(attributeType, inherit, out attr);
 
-            if (attrib == null || attrib.Length == 0)
-                return null;
+                if (attrInstanceCount == 0)
+                    return null;
+                else if (attrInstanceCount == 1)
+                    return (Attribute)attr;
+                // else, fall through and throw an AmbiguousMatchException
+            }
+            else
+            {
+                Attribute[] attrib = GetCustomAttributes(element, attributeType, inherit);
 
-            if (attrib.Length == 0)
-                return null;
+                if (attrib == null || attrib.Length == 0)
+                    return null;
 
-            if (attrib.Length == 1)
-                return attrib[0];
+                if (attrib.Length == 1)
+                    return attrib[0];
+            }
 
             throw new AmbiguousMatchException(Environment.GetResourceString("RFLCT.AmbigCust"));
         }
@@ -727,15 +833,42 @@ namespace System {
 
         public static Attribute GetCustomAttribute(Module element, Type attributeType, bool inherit)
         {
+            if (element == null)
+                throw new ArgumentNullException("element");
+
+            if (attributeType == null)
+                throw new ArgumentNullException("attributeType");
+
+            if (!attributeType.IsSubclassOf(typeof(Attribute)) && attributeType != typeof(Attribute))
+                throw new ArgumentException(Environment.GetResourceString("Argument_MustHaveAttributeBaseClass"));
+            Contract.EndContractBlock();
+
             // Returns an Attribute of base class/inteface attributeType on the Module or null if none exists.
             // throws an AmbiguousMatchException if there are more than one defined.
-            Attribute[] attrib = GetCustomAttributes(element,attributeType,inherit);
+            // If the element is an instance of RuntimeModule, use a specialized internal implementation
+            // which minimizes allocations.
+            var elementRT = element as RuntimeModule;
+            if (elementRT != null)
+            {
+                object attr;
+                var attrInstanceCount = elementRT.GetCustomAttribute(attributeType, inherit, out attr);
 
-            if (attrib == null || attrib.Length == 0)
-                return null;
+                if (attrInstanceCount == 0)
+                    return null;
+                else if (attrInstanceCount == 1)
+                    return (Attribute)attr;
+                // else, fall through and throw an AmbiguousMatchException
+            }
+            else
+            {
+                Attribute[] attrib = GetCustomAttributes(element, attributeType, inherit);
 
-            if (attrib.Length == 1)
-                return attrib[0];
+                if (attrib == null || attrib.Length == 0)
+                    return null;
+
+                if (attrib.Length == 1)
+                    return attrib[0];
+            }
 
             throw new AmbiguousMatchException(Environment.GetResourceString("RFLCT.AmbigCust"));
         }
@@ -805,15 +938,42 @@ namespace System {
 
         public static Attribute GetCustomAttribute(Assembly element, Type attributeType, bool inherit)
         {
+            if (element == null)
+                throw new ArgumentNullException("element");
+
+            if (attributeType == null)
+                throw new ArgumentNullException("attributeType");
+
+            if (!attributeType.IsSubclassOf(typeof(Attribute)) && attributeType != typeof(Attribute))
+                throw new ArgumentException(Environment.GetResourceString("Argument_MustHaveAttributeBaseClass"));
+            Contract.EndContractBlock();
+
             // Returns an Attribute of base class/inteface attributeType on the Assembly or null if none exists.
             // throws an AmbiguousMatchException if there are more than one defined.
-            Attribute[] attrib = GetCustomAttributes(element,attributeType,inherit);
+            // If the element is an instance of RuntimeAssembly, use a specialized internal implementation
+            // which minimizes allocations.
+            var elementRT = element as RuntimeAssembly;
+            if (elementRT != null)
+            {
+                object attr;
+                var attrInstanceCount = elementRT.GetCustomAttribute(attributeType, inherit, out attr);
 
-            if (attrib == null || attrib.Length == 0)
-                return null;
+                if (attrInstanceCount == 0)
+                    return null;
+                else if (attrInstanceCount == 1)
+                    return (Attribute)attr;
+                // else, fall through and throw an AmbiguousMatchException
+            }
+            else
+            {
+                Attribute[] attrib = GetCustomAttributes(element, attributeType, inherit);
 
-            if (attrib.Length == 1)
-                return attrib[0];
+                if (attrib == null || attrib.Length == 0)
+                    return null;
+
+                if (attrib.Length == 1)
+                    return attrib[0];
+            }
 
             throw new AmbiguousMatchException(Environment.GetResourceString("RFLCT.AmbigCust"));
         }

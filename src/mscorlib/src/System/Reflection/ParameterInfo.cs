@@ -387,7 +387,7 @@ namespace System.Reflection
         private MethodBase m_originalMember = null;
         #endregion
 
-        #region Internal Properties
+        #region Internal Members
         internal MethodBase DefiningMethod
         {
             get
@@ -397,6 +397,29 @@ namespace System.Reflection
                 return result;
             }
         }
+
+        internal int GetCustomAttribute(Type attributeType, bool inherit, out object attr)
+        {
+            if (attributeType == null)
+                throw new ArgumentNullException("attributeType");
+            Contract.Ensures(Contract.Result<int>() >= 0);
+            Contract.Ensures((Contract.Result<int>() == 1) == (Contract.ValueAtReturn(out attr) != null));
+            Contract.EndContractBlock();
+
+            if (MdToken.IsNullToken(m_tkParamDef))
+            {
+                attr = default(object);
+                return 0;
+            }
+
+            RuntimeType attributeRuntimeType = attributeType.UnderlyingSystemType as RuntimeType;
+
+            if (attributeRuntimeType == null)
+                throw new ArgumentException(Environment.GetResourceString("Arg_MustBeType"), "attributeType");
+
+            return CustomAttribute.GetCustomAttribute(this, attributeRuntimeType, out attr);
+        }
+
         #endregion
 
         #region VTS magic to serialize/deserialized to/from pre-Whidbey endpoints.

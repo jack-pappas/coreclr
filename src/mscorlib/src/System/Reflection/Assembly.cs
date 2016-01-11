@@ -1548,6 +1548,22 @@ namespace System.Reflection
             }
         }
 
+        internal int GetCustomAttribute(Type attributeType, bool inherit, out object attr)
+        {
+            if (attributeType == null)
+                throw new ArgumentNullException("attributeType");
+            Contract.Ensures(Contract.Result<int>() >= 0);
+            Contract.Ensures((Contract.Result<int>() == 1) == (Contract.ValueAtReturn(out attr) != null));
+            Contract.EndContractBlock();
+
+            RuntimeType attributeRuntimeType = attributeType.UnderlyingSystemType as RuntimeType;
+
+            if (attributeRuntimeType == null)
+                throw new ArgumentException(Environment.GetResourceString("Arg_MustBeType"), "attributeType");
+
+            return CustomAttribute.GetCustomAttribute(this, attributeRuntimeType, out attr);
+        }
+
         public override Object[] GetCustomAttributes(bool inherit)
         {
             return CustomAttribute.GetCustomAttributes(this, typeof(object) as RuntimeType);

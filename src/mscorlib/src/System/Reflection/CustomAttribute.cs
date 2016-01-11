@@ -1320,6 +1320,28 @@ namespace System.Reflection
         }
 
         [System.Security.SecurityCritical]  // auto-generated
+        internal static int GetCustomAttribute(RuntimeType type, RuntimeType caType, bool inherit, out object attr)
+        {
+            Contract.Requires(type != null);
+            Contract.Requires(caType != null);
+            Contract.Ensures(Contract.Result<int>() >= 0);
+            Contract.Ensures((Contract.Result<int>() == 1) == (Contract.ValueAtReturn(out attr) != null));
+
+            // TODO: Re-implement this method to avoid allocating the array of attributes.
+            var attrs = GetCustomAttributes(type, caType, inherit);
+            if (attrs == null)
+            {
+                attr = null;
+                return 0;
+            }
+            else
+            {
+                attr = attrs.Length == 1 ? attrs[0] : null;
+                return attrs.Length;
+            }
+        }
+
+        [System.Security.SecurityCritical]  // auto-generated
         internal static Object[] GetCustomAttributes(RuntimeType type, RuntimeType caType, bool inherit)
         {
             Contract.Requires(type != null);
@@ -1421,6 +1443,182 @@ namespace System.Reflection
         {
             // Since parameters have no transparency state, we look at the defining method instead.
             return AllowCriticalCustomAttributes(parameter.DefiningMethod);
+        }
+
+        [System.Security.SecurityCritical]  // auto-generated
+        internal static int GetCustomAttribute(RuntimeMethodInfo method, RuntimeType caType, bool inherit, out object attr)
+        {
+            Contract.Requires(method != null);
+            Contract.Requires(caType != null);
+            Contract.Ensures(Contract.Result<int>() >= 0);
+            Contract.Ensures((Contract.Result<int>() == 1) == (Contract.ValueAtReturn(out attr) != null));
+
+            // TODO: Re-implement this method to avoid allocating the array of attributes.
+            var attrs = GetCustomAttributes(method, caType, inherit);
+            if (attrs == null)
+            {
+                attr = null;
+                return 0;
+            }
+            else
+            {
+                attr = attrs.Length == 1 ? attrs[0] : null;
+                return attrs.Length;
+            }
+        }
+
+        [System.Security.SecuritySafeCritical]  // auto-generated
+        internal static int GetCustomAttribute(RuntimeConstructorInfo ctor, RuntimeType caType, out object attr)
+        {
+            Contract.Requires(ctor != null);
+            Contract.Requires(caType != null);
+            Contract.Ensures(Contract.Result<int>() >= 0);
+            Contract.Ensures((Contract.Result<int>() == 1) == (Contract.ValueAtReturn(out attr) != null));
+
+            // TODO: Re-implement this method to avoid allocating the array of attributes.
+            var attrs = GetCustomAttributes(ctor, caType);
+            if (attrs == null)
+            {
+                attr = null;
+                return 0;
+            }
+            else
+            {
+                attr = attrs.Length == 1 ? attrs[0] : null;
+                return attrs.Length;
+            }
+        }
+
+        [System.Security.SecuritySafeCritical]  // auto-generated
+        internal static int GetCustomAttribute(RuntimePropertyInfo property, RuntimeType caType, out object attr)
+        {
+            Contract.Requires(property != null);
+            Contract.Requires(caType != null);
+            Contract.Ensures(Contract.Result<int>() >= 0);
+            Contract.Ensures((Contract.Result<int>() == 1) == (Contract.ValueAtReturn(out attr) != null));
+
+            // TODO: Re-implement this method to avoid allocating the array of attributes.
+            var attrs = GetCustomAttributes(property, caType);
+            if (attrs == null)
+            {
+                attr = null;
+                return 0;
+            }
+            else
+            {
+                attr = attrs.Length == 1 ? attrs[0] : null;
+                return attrs.Length;
+            }
+        }
+
+        [System.Security.SecuritySafeCritical]  // auto-generated
+        internal static int GetCustomAttribute(RuntimeEventInfo e, RuntimeType caType, out object attr)
+        {
+            Contract.Requires(e != null);
+            Contract.Requires(caType != null);
+            Contract.Ensures(Contract.Result<int>() >= 0);
+            Contract.Ensures((Contract.Result<int>() == 1) == (Contract.ValueAtReturn(out attr) != null));
+
+            // TODO: Re-implement this method to avoid allocating the array of attributes.
+            var attrs = GetCustomAttributes(e, caType);
+            if (attrs == null)
+            {
+                attr = null;
+                return 0;
+            }
+            else
+            {
+                attr = attrs.Length == 1 ? attrs[0] : null;
+                return attrs.Length;
+            }
+        }
+
+        [System.Security.SecuritySafeCritical]  // auto-generated
+        internal static int GetCustomAttribute(RuntimeFieldInfo field, RuntimeType caType, out object attr)
+        {
+            Contract.Requires(field != null);
+            Contract.Requires(caType != null);
+            Contract.Ensures(Contract.Result<int>() >= 0);
+            Contract.Ensures((Contract.Result<int>() == 1) == (Contract.ValueAtReturn(out attr) != null));
+
+            // TODO: Re-implement this method to avoid allocating the array of attributes.
+            var attrs = GetCustomAttributes(field, caType);
+            if (attrs == null)
+            {
+                attr = null;
+                return 0;
+            }
+            else
+            {
+                attr = attrs.Length == 1 ? attrs[0] : null;
+                return attrs.Length;
+            }
+        }
+
+        [System.Security.SecuritySafeCritical]  // auto-generated
+        internal static int GetCustomAttribute(RuntimeParameterInfo parameter, RuntimeType caType, out object attr)
+        {
+            Contract.Requires(parameter != null);
+            Contract.Requires(caType != null);
+            Contract.Ensures(Contract.Result<int>() >= 0);
+            Contract.Ensures((Contract.Result<int>() == 1) == (Contract.ValueAtReturn(out attr) != null));
+
+            // TODO: Re-implement this method to avoid allocating the array of attributes.
+            var attrs = GetCustomAttributes(parameter, caType);
+            if (attrs == null)
+            {
+                attr = null;
+                return 0;
+            }
+            else
+            {
+                attr = attrs.Length == 1 ? attrs[0] : null;
+                return attrs.Length;
+            }
+        }
+
+        [System.Security.SecuritySafeCritical]  // auto-generated
+        internal static int GetCustomAttribute(RuntimeAssembly assembly, RuntimeType caType, out object attr)
+        {
+            Contract.Requires(assembly != null);
+            Contract.Requires(caType != null);
+            Contract.Ensures(Contract.Result<int>() >= 0);
+            Contract.Ensures((Contract.Result<int>() == 1) == (Contract.ValueAtReturn(out attr) != null));
+
+            // TODO: Re-implement this method to avoid allocating the array of attributes.
+            var attrs = GetCustomAttributes(assembly, caType);
+            if (attrs == null)
+            {
+                attr = null;
+                return 0;
+            }
+            else
+            {
+                attr = attrs.Length == 1 ? attrs[0] : null;
+                return attrs.Length;
+            }
+        }
+
+        [System.Security.SecuritySafeCritical]  // auto-generated
+        internal static int GetCustomAttribute(RuntimeModule module, RuntimeType caType, out object attr)
+        {
+            Contract.Requires(module != null);
+            Contract.Requires(caType != null);
+            Contract.Ensures(Contract.Result<int>() >= 0);
+            Contract.Ensures((Contract.Result<int>() == 1) == (Contract.ValueAtReturn(out attr) != null));
+
+            // TODO: Re-implement this method to avoid allocating the array of attributes.
+            var attrs = GetCustomAttributes(module, caType);
+            if (attrs == null)
+            {
+                attr = null;
+                return 0;
+            }
+            else
+            {
+                attr = attrs.Length == 1 ? attrs[0] : null;
+                return attrs.Length;
+            }
         }
 
         [System.Security.SecurityCritical]  // auto-generated
