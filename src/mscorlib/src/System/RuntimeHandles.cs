@@ -25,7 +25,7 @@ namespace System
     
     [Serializable()]
     [System.Runtime.InteropServices.ComVisible(true)]
-    public unsafe struct RuntimeTypeHandle : ISerializable
+    public unsafe struct RuntimeTypeHandle : ISerializable, IEquatable<RuntimeTypeHandle>
     {
         // Returns handle for interop with EE. The handle is guaranteed to be non-null.
         internal RuntimeTypeHandle GetNativeHandle()
