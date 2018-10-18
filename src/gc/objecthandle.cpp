@@ -1493,7 +1493,7 @@ void Ref_UpdatePointers(uint32_t condemned, uint32_t maxgen, ScanContext* sc, Re
     // the benefits of fast allocation / free & generational awareness by supporting
     // the SyncTable as a new block type.
     // @TODO cwb: wait for compelling performance measurements.</REVISIT_TODO>
-    BOOL bDo = TRUE;
+    bool bDo = true;
 
     if (IsServerHeap()) 
     {

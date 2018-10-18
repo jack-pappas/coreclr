@@ -626,7 +626,7 @@ int CompareHandlesByFreeOrder(uintptr_t p, uintptr_t q);
  * Determines whether a given handle type has user data.
  *
  */
-__inline BOOL TypeHasUserData(HandleTable *pTable, uint32_t uType)
+__inline bool TypeHasUserData(HandleTable *pTable, uint32_t uType)
 {
     LIMITED_METHOD_CONTRACT;
 
@@ -644,7 +644,7 @@ __inline BOOL TypeHasUserData(HandleTable *pTable, uint32_t uType)
  * Determines if it is OK to free the specified segment at this time.
  *
  */
-BOOL TableCanFreeSegmentNow(HandleTable *pTable, TableSegment *pSegment);
+bool TableCanFreeSegmentNow(HandleTable *pTable, TableSegment *pSegment);
 
 
 /*
@@ -653,7 +653,7 @@ BOOL TableCanFreeSegmentNow(HandleTable *pTable, TableSegment *pSegment);
  * Determines if the lock count for the specified block is currently non-zero.
  *
  */
-__inline BOOL BlockIsLocked(TableSegment *pSegment, uint32_t uBlock)
+__inline bool BlockIsLocked(TableSegment *pSegment, uint32_t uBlock)
 {
     LIMITED_METHOD_CONTRACT;
 
@@ -713,7 +713,7 @@ __inline void BlockUnlock(TableSegment *pSegment, uint32_t uBlock)
  * Gets the user data pointer for the first handle in a block.
  *
  */
-PTR_uintptr_t BlockFetchUserDataPointer(PTR__TableSegmentHeader pSegment, uint32_t uBlock, BOOL fAssertOnError);
+PTR_uintptr_t BlockFetchUserDataPointer(PTR__TableSegmentHeader pSegment, uint32_t uBlock, bool fAssertOnError);
 
 
 /*
@@ -787,7 +787,7 @@ void SegmentFree(TableSegment *pSegment);
  * Mark ready for all non-pending OverlappedData that get moved to default domain.
  *
  */
-BOOL TableHandleAsyncPinHandles(HandleTable *pTable, const AsyncPinCallbackContext& callbackCtx);
+bool TableHandleAsyncPinHandles(HandleTable *pTable, const AsyncPinCallbackContext& callbackCtx);
 
 /*
  * TableRelocateAsyncPinHandles
@@ -800,7 +800,7 @@ void TableRelocateAsyncPinHandles(HandleTable *pTable, HandleTable *pTargetTable
 /*
  * Check if a handle is part of a HandleTable
  */
-BOOL TableContainHandle(HandleTable *pTable, OBJECTHANDLE handle);
+bool TableContainHandle(HandleTable *pTable, OBJECTHANDLE handle);
 
 /*
  * SegmentRemoveFreeBlocks
@@ -828,7 +828,7 @@ void SegmentResortChains(TableSegment *pSegment);
  * Checks to see if any pages can be decommitted from the segment.
  *
  */
-BOOL DoesSegmentNeedsToTrimExcessPages(TableSegment *pSegment);
+bool DoesSegmentNeedsToTrimExcessPages(TableSegment *pSegment);
 
 /*
  * SegmentTrimExcessPages
@@ -974,7 +974,7 @@ void CALLBACK xxxTableScanHandlesAsync(PTR_HandleTable pTable,
  * IN OTHER WORDS, SCANNING WITH A MIX OF USER-DATA AND NON-USER-DATA TYPES IS NOT SUPPORTED
  *
  */
-BOOL TypesRequireUserDataScanning(HandleTable *pTable, const uint32_t *types, uint32_t typeCount);
+bool TypesRequireUserDataScanning(HandleTable *pTable, const uint32_t *types, uint32_t typeCount);
 
 
 /*

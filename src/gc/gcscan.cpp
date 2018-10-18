@@ -204,7 +204,7 @@ void GCScan::GcScanDependentHandlesForProfilerAndETW (int max_gen, ScanContext* 
 #endif // defined(GC_PROFILING) || defined(FEATURE_EVENT_TRACE)
 }
 
-void GCScan::GcRuntimeStructuresValid (BOOL bValid)
+void GCScan::GcRuntimeStructuresValid (bool bValid)
 {
     WRAPPER_NO_CONTRACT;
     if (!bValid)

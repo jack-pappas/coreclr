@@ -137,7 +137,7 @@ void            HndNotifyGcCycleComplete(HHANDLETABLE hTable, uint32_t condemned
  */
 
 uint32_t        HndCountHandles(HHANDLETABLE hTable);
-uint32_t        HndCountAllHandles(BOOL fUseLocks);
+uint32_t        HndCountAllHandles(bool fUseLocks);
 
 /*--------------------------------------------------------------------------*/
 
@@ -163,7 +163,7 @@ void* HndInterlockedCompareExchangeHandle(OBJECTHANDLE handle, OBJECTREF objref,
  * succeeds if transitioning from NULL to non-NULL.  In other words, if this handle
  * is being initialized for the first time.
  */
-BOOL HndFirstAssignHandle(OBJECTHANDLE handle, OBJECTREF objref);
+bool HndFirstAssignHandle(OBJECTHANDLE handle, OBJECTREF objref);
 
 /*
  * inline handle dereferencing
@@ -197,7 +197,7 @@ OBJECTREF HndFetchHandle(OBJECTHANDLE handle)
 /*
  * inline null testing (needed in certain cases where we're in the wrong GC mod)
  */
-FORCEINLINE BOOL HndIsNull(OBJECTHANDLE handle)
+FORCEINLINE bool HndIsNull(OBJECTHANDLE handle)
 {
     LIMITED_METHOD_CONTRACT;
 
@@ -213,13 +213,13 @@ FORCEINLINE BOOL HndIsNull(OBJECTHANDLE handle)
  * Checks handle value for null or special value used for free handles in cache.
  *
  */
-FORCEINLINE BOOL HndIsNullOrDestroyedHandle(_UNCHECKED_OBJECTREF value)
+FORCEINLINE bool HndIsNullOrDestroyedHandle(_UNCHECKED_OBJECTREF value)
 {
     LIMITED_METHOD_CONTRACT;
 
 #ifdef DEBUG_DestroyedHandleValue
     if (value == DEBUG_DestroyedHandleValue)
-         return TRUE;
+         return true;
 #endif
 
     return (value == NULL);

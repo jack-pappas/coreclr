@@ -249,7 +249,7 @@ public:
 
 private:
     
-    BOOL IsValueClassSeries()
+    bool IsValueClassSeries()
     {
         return ((ptrdiff_t) GetNumSeries()) < 0;
     }

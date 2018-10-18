@@ -485,8 +485,8 @@ struct ADIndex
 
     ADIndex () : m_dwIndex(RH_DEFAULT_DOMAIN_ID) {}
     explicit ADIndex (DWORD id) : m_dwIndex(id) {}
-    BOOL operator==(const ADIndex& ad) const { return m_dwIndex == ad.m_dwIndex; }
-    BOOL operator!=(const ADIndex& ad) const { return m_dwIndex != ad.m_dwIndex; }
+    bool operator==(const ADIndex& ad) const { return m_dwIndex == ad.m_dwIndex; }
+    bool operator!=(const ADIndex& ad) const { return m_dwIndex != ad.m_dwIndex; }
 };
 
 #endif // __GCENV_BASE_INCLUDED__

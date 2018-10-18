@@ -165,7 +165,7 @@ public:
     
     void    ValidateObjectMember (Object *obj);
 
-    PER_HEAP    size_t  ApproxTotalBytesInUse(BOOL small_heap_only = FALSE);
+    PER_HEAP    size_t  ApproxTotalBytesInUse(bool small_heap_only = false);
     PER_HEAP    size_t  ApproxFreeBytes();
 
     unsigned GetCondemnedGeneration();
@@ -234,7 +234,7 @@ public:	// FIX
 
     size_t  GarbageCollectGeneration (unsigned int gen=0, gc_reason reason=reason_empty);
     // Interface with gc_heap
-    size_t  GarbageCollectTry (int generation, BOOL low_memory_p=FALSE, int mode=collection_blocking);
+    size_t  GarbageCollectTry (int generation, bool low_memory_p=false, int mode=collection_blocking);
 
     // frozen segment management functions
     virtual segment_handle RegisterFrozenSegment(segment_info *pseginfo);
@@ -307,7 +307,7 @@ protected:
 public:
     Object * NextObj (Object * object);
 #if defined (FEATURE_BASICFREEZE) && defined (VERIFY_HEAP)
-    BOOL IsInFrozenSegment (Object * object);
+    bool IsInFrozenSegment (Object * object);
 #endif // defined (FEATURE_BASICFREEZE) && defined (VERIFY_HEAP)
 };
 

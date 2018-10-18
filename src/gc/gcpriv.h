@@ -866,7 +866,7 @@ size_t Align (size_t nbytes, int alignment=ALIGNCONST)
 
 //return alignment constant for small object heap vs large object heap
 inline
-int get_alignment_constant (BOOL small_object_p)
+int get_alignment_constant (bool small_object_p)
 {
 #ifdef FEATURE_STRUCTALIGN
     // If any objects on the large object heap require 8-byte alignment,
@@ -1151,7 +1151,7 @@ public:
     PER_HEAP
     void verify_free_lists(); 
     PER_HEAP
-    void verify_heap (BOOL begin_gc_p);
+    void verify_heap (bool begin_gc_p);
 #endif //VERIFY_HEAP
 
     PER_HEAP_ISOLATED
@@ -1169,7 +1169,7 @@ public:
                                      size_t size, 
                                      int h_number);
     static
-    l_heap* make_large_heap (uint8_t* new_pages, size_t size, BOOL managed);
+    l_heap* make_large_heap (uint8_t* new_pages, size_t size, bool managed);
 
     static
     gc_heap* make_gc_heap(
@@ -2892,7 +2892,7 @@ public:
     PER_HEAP
     size_t fgn_last_alloc;
 
-    static uint32_t user_thread_wait (GCEvent *event, BOOL no_mode_change, int time_out_ms=INFINITE);
+    static uint32_t user_thread_wait (GCEvent *event, bool no_mode_change, int time_out_ms=INFINITE);
 
     static wait_full_gc_status full_gc_wait (GCEvent *event, int time_out_ms);
 

@@ -733,7 +733,7 @@ void HndEnumHandles(HHANDLETABLE hTable, const uint32_t *puType, uint32_t uTypeC
     BLOCKSCANPROC pfnBlock;
 
     // do we need to support user data?
-    BOOL fEnumUserData = TypesRequireUserDataScanning(pTable, puType, uTypeCount);
+    bool fEnumUserData = TypesRequireUserDataScanning(pTable, puType, uTypeCount);
 
     if (fEnumUserData)
     {
@@ -795,7 +795,7 @@ void HndScanHandlesForGC(HHANDLETABLE hTable, HANDLESCANPROC scanProc, uintptr_t
     BLOCKSCANPROC pfnBlock = NULL;
 
     // do we need to support user data?
-    BOOL enumUserData =
+    bool enumUserData =
         ((flags & HNDGCF_EXTRAINFO) &&
         TypesRequireUserDataScanning(pTable, types, typeCount));
 
@@ -1083,7 +1083,7 @@ uint32_t HndCountHandles(HHANDLETABLE hTable)
  * while its handles are being counted.
  *
  */
-uint32_t HndCountAllHandles(BOOL fUseLocks)
+uint32_t HndCountAllHandles(bool fUseLocks)
 {
     uint32_t uCount = 0;
     int offset = 0;
@@ -1136,7 +1136,7 @@ uint32_t HndCountAllHandles(BOOL fUseLocks)
     return uCount;
 }
 
-BOOL  Ref_HandleAsyncPinHandles(async_pin_enum_fn asyncPinCallback, void* context)
+bool Ref_HandleAsyncPinHandles(async_pin_enum_fn asyncPinCallback, void* context)
 {
     CONTRACTL
     {
@@ -1147,13 +1147,13 @@ BOOL  Ref_HandleAsyncPinHandles(async_pin_enum_fn asyncPinCallback, void* contex
 
     AsyncPinCallbackContext callbackCtx(asyncPinCallback, context);
     HandleTableBucket *pBucket = g_HandleTableMap.pBuckets[0];
-    BOOL result = FALSE;
+    bool result = false;
     int limit = getNumberOfSlots();
     for (int n = 0; n < limit; n ++ )
     {
         if (TableHandleAsyncPinHandles(Table(pBucket->pTable[n]), callbackCtx))
         {
-            result = TRUE;
+            result = true;
         }
     }
 

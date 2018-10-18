@@ -280,12 +280,12 @@ struct ScanQNode
  * Creates an inclusion map for the specified type array.
  *
  */
-void BuildInclusionMap(BOOL *rgTypeInclusion, const uint32_t *puType, uint32_t uTypeCount)
+void BuildInclusionMap(bool *rgTypeInclusion, const uint32_t *puType, uint32_t uTypeCount)
 {
     LIMITED_METHOD_CONTRACT;
 
     // by default, no types are scanned
-    ZeroMemory(rgTypeInclusion, INCLUSION_MAP_SIZE * sizeof(BOOL));
+    ZeroMemory(rgTypeInclusion, INCLUSION_MAP_SIZE * sizeof(bool));
 
     // add the specified types to the inclusion map
     for (uint32_t u = 0; u < uTypeCount; u++)
@@ -297,7 +297,7 @@ void BuildInclusionMap(BOOL *rgTypeInclusion, const uint32_t *puType, uint32_t u
         _ASSERTE(uType < HANDLE_MAX_INTERNAL_TYPES);
 
         // add this type to the inclusion map
-        rgTypeInclusion[uType + 1] = TRUE;
+        rgTypeInclusion[uType + 1] = true;
     }
 }
 
@@ -308,7 +308,7 @@ void BuildInclusionMap(BOOL *rgTypeInclusion, const uint32_t *puType, uint32_t u
  * Checks a type inclusion map for the inclusion of a particular block.
  *
  */
-__inline BOOL IsBlockIncluded(TableSegment *pSegment, uint32_t uBlock, const BOOL *rgTypeInclusion)
+__inline bool IsBlockIncluded(TableSegment *pSegment, uint32_t uBlock, const bool *rgTypeInclusion)
 {
     LIMITED_METHOD_CONTRACT;
 
@@ -334,7 +334,7 @@ __inline BOOL IsBlockIncluded(TableSegment *pSegment, uint32_t uBlock, const BOO
  * IN OTHER WORDS, SCANNING WITH A MIX OF USER-DATA AND NON-USER-DATA TYPES IS NOT SUPPORTED
  *
  */
-BOOL TypesRequireUserDataScanning(HandleTable *pTable, const uint32_t *types, uint32_t typeCount)
+bool TypesRequireUserDataScanning(HandleTable *pTable, const uint32_t *types, uint32_t typeCount)
 {
     WRAPPER_NO_CONTRACT;
 
@@ -1185,7 +1185,7 @@ typedef void (CALLBACK *QNODESCANPROC)(AsyncScanInfo *pAsyncInfo, ScanQNode *pQN
  * Calls the specified handler once for each node in a scan queue.
  *
  */
-void ProcessScanQueue(AsyncScanInfo *pAsyncInfo, QNODESCANPROC pfnNodeHandler, uintptr_t lParam, BOOL fCountEmptyQNodes)
+void ProcessScanQueue(AsyncScanInfo *pAsyncInfo, QNODESCANPROC pfnNodeHandler, uintptr_t lParam, bool fCountEmptyQNodes)
 {
     WRAPPER_NO_CONTRACT;
 
@@ -1610,7 +1610,7 @@ void SegmentScanByTypeChain(PTR_TableSegment pSegment, uint32_t uType, BLOCKSCAN
  * Implements the multi-type block scanning loop for a single segment.
  *
  */
-void SegmentScanByTypeMap(PTR_TableSegment pSegment, const BOOL *rgTypeInclusion,
+void SegmentScanByTypeMap(PTR_TableSegment pSegment, const bool *rgTypeInclusion,
                           BLOCKSCANPROC pfnBlockHandler, ScanCallbackInfo *pInfo)
 {
     WRAPPER_NO_CONTRACT;
@@ -1686,7 +1686,7 @@ void CALLBACK TableScanHandles(PTR_HandleTable pTable,
     _ASSERTE(pInfo);
 
     // we may need a type inclusion map for multi-type scans
-    BOOL rgTypeInclusion[INCLUSION_MAP_SIZE];
+    bool rgTypeInclusion[INCLUSION_MAP_SIZE];
 
     // we only need to scan types if we have a type array and a callback to call
     if (!pfnBlockHandler || !puType)

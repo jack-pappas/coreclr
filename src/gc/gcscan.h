@@ -43,7 +43,7 @@ class GCScan
     //
     static void GcScanHandles (promote_func* fn, int condemned, int max_gen, ScanContext* sc);
 
-    static void GcRuntimeStructuresValid (BOOL bValid);
+    static void GcRuntimeStructuresValid (bool bValid);
 
     static bool GetGcRuntimeStructuresValid ();
 #ifdef DACCESS_COMPILE    

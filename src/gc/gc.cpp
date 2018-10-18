@@ -32817,7 +32817,7 @@ gc_heap::verify_free_lists ()
 }
 
 void
-gc_heap::verify_heap (BOOL begin_gc_p)
+gc_heap::verify_heap (bool begin_gc_p)
 {
     int             heap_verify_level = static_cast<int>(GCConfig::GetHeapVerifyLevel());
     size_t          last_valid_brick = 0;
@@ -34621,7 +34621,7 @@ retry:
 }
 
 size_t
-GCHeap::GarbageCollectTry (int generation, BOOL low_memory_p, int mode)
+GCHeap::GarbageCollectTry (int generation, bool low_memory_p, int mode)
 {
     int gen = (generation < 0) ? 
                max_generation : min (generation, max_generation);
@@ -35152,7 +35152,7 @@ int GCHeap::CollectionCount (int generation, int get_bgc_fgc_count)
         return (int)dd_collection_count (hp->dynamic_data_of (generation));
 }
 
-size_t GCHeap::ApproxTotalBytesInUse(BOOL small_heap_only)
+size_t GCHeap::ApproxTotalBytesInUse(bool small_heap_only)
 {
     size_t totsize = 0;
     //GCTODO

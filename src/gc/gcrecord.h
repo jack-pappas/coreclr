@@ -117,7 +117,7 @@ public:
     }
 
     // This checks if condition_to_check is the only condition set.
-    BOOL is_only_condition (gc_condemn_reason_condition condition_to_check)
+    bool is_only_condition (gc_condemn_reason_condition condition_to_check)
     {
         uint32_t temp_conditions = 1 << condition_to_check;
         return !(condemn_reasons_condition ^ temp_conditions);
@@ -240,29 +240,29 @@ enum gc_heap_compact_reason
 };
 
 #ifndef DACCESS_COMPILE
-static BOOL gc_heap_compact_reason_mandatory_p[] =
+static const bool gc_heap_compact_reason_mandatory_p[] =
 {
-    TRUE, //compact_low_ephemeral = 0,
-    FALSE, //compact_high_frag = 1,
-    TRUE, //compact_no_gaps = 2,
-    TRUE, //compact_loh_forced = 3,
-    TRUE, //compact_last_gc = 4
-    TRUE, //compact_induced_compacting = 5,
-    FALSE, //compact_fragmented_gen0 = 6, 
-    FALSE, //compact_high_mem_load = 7, 
-    TRUE, //compact_high_mem_frag = 8, 
-    TRUE, //compact_vhigh_mem_frag = 9,
-    TRUE //compact_no_gc_mode = 10
+    true, //compact_low_ephemeral = 0,
+    false, //compact_high_frag = 1,
+    true, //compact_no_gaps = 2,
+    true, //compact_loh_forced = 3,
+    true, //compact_last_gc = 4
+    true, //compact_induced_compacting = 5,
+    false, //compact_fragmented_gen0 = 6, 
+    false, //compact_high_mem_load = 7, 
+    true, //compact_high_mem_frag = 8, 
+    true, //compact_vhigh_mem_frag = 9,
+    true //compact_no_gc_mode = 10
 };
 
-static BOOL gc_expand_mechanism_mandatory_p[] =
+static const bool gc_expand_mechanism_mandatory_p[] =
 {
-    FALSE, //expand_reuse_normal = 0,
-    TRUE, //expand_reuse_bestfit = 1,
-    FALSE, //expand_new_seg_ep = 2, // new seg with ephemeral promotion
-    TRUE, //expand_new_seg = 3,
-    FALSE, //expand_no_memory = 4, // we can't get a new seg.
-    TRUE //expand_next_full_gc = 5
+    false, //expand_reuse_normal = 0,
+    true, //expand_reuse_bestfit = 1,
+    false, //expand_new_seg_ep = 2, // new seg with ephemeral promotion
+    true, //expand_new_seg = 3,
+    false, //expand_no_memory = 4, // we can't get a new seg.
+    true //expand_next_full_gc = 5
 };
 #endif //!DACCESS_COMPILE
 
@@ -355,7 +355,7 @@ public:
         machanism_bits &= ~(1 << mech_bit);
     }
 
-    BOOL is_mechanism_bit_set (gc_mechanism_bit_per_heap mech_bit)
+    bool is_mechanism_bit_set (gc_mechanism_bit_per_heap mech_bit)
     {
         return (machanism_bits & (1 << mech_bit));
     }
@@ -414,7 +414,7 @@ struct gc_history_global
         global_mechanims_p |= (1 << mechanism);
     }
 
-    BOOL get_mechanism_p (gc_global_mechanism_p mechanism)
+    bool get_mechanism_p (gc_global_mechanism_p mechanism)
     {
         return (global_mechanims_p & (1 << mechanism));
     }

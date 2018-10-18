@@ -60,7 +60,7 @@ inline void* HndInterlockedCompareExchangeHandle(OBJECTHANDLE handle, OBJECTREF 
     return ret;
 }
 
-inline BOOL HndFirstAssignHandle(OBJECTHANDLE handle, OBJECTREF objref)
+inline bool HndFirstAssignHandle(OBJECTHANDLE handle, OBJECTREF objref)
 {
     CONTRACTL
     {
@@ -79,7 +79,7 @@ inline BOOL HndFirstAssignHandle(OBJECTHANDLE handle, OBJECTREF objref)
     _UNCHECKED_OBJECTREF null = NULL;
 
     // store the pointer if we are the first ones here
-    BOOL success = (NULL == Interlocked::CompareExchangePointer(reinterpret_cast<_UNCHECKED_OBJECTREF volatile*>(handle),
+    bool success = (NULL == Interlocked::CompareExchangePointer(reinterpret_cast<_UNCHECKED_OBJECTREF volatile*>(handle),
                                                                 value,
                                                                 null));
 
