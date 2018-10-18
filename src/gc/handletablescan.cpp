@@ -172,24 +172,46 @@ If you change any of those algorithm, please verify it by this program:
         }    
  */
 
-#define GEN_MAX_AGE                         (0x3F)
-#define GEN_CLAMP                           (0x3F3F3F3F)
-#define GEN_AGE_LIMIT                       (0x3E3E3E3E)
-#define GEN_INVALID                         (0xC0C0C0C0)
-#define GEN_FILL                            (0x80808080)
-#define GEN_MASK                            (0x40404040)
-#define GEN_INC_SHIFT                       (6)
+static constexpr uint8_t GEN_MAX_AGE =      0x3F;
+static constexpr uint32_t GEN_CLAMP =       0x3F3F3F3F;
+static constexpr uint32_t GEN_AGE_LIMIT =   0x3E3E3E3E;
+static constexpr uint32_t GEN_INVALID =     0xC0C0C0C0;
+static constexpr uint32_t GEN_FILL =        0x80808080;
+static constexpr uint32_t GEN_MASK =        0x40404040;
+static constexpr uint32_t GEN_INC_SHIFT =   6;
 
-#define PREFOLD_FILL_INTO_AGEMASK(msk)      (1 + (msk) + (~GEN_FILL))
+static constexpr uint32_t PREFOLD_FILL_INTO_AGEMASK(uint32_t msk)
+{
+    return 1 + msk + ~GEN_FILL;
+}
 
-#define GEN_FULLGC                          PREFOLD_FILL_INTO_AGEMASK(GEN_AGE_LIMIT)
+static constexpr uint32_t GEN_FULLGC =      PREFOLD_FILL_INTO_AGEMASK(GEN_AGE_LIMIT);
 
-#define MAKE_CLUMP_MASK_ADDENDS(bytes)      (bytes >> GEN_INC_SHIFT)
-#define APPLY_CLUMP_ADDENDS(gen, addend)    (gen + addend)
+static constexpr uint32_t MAKE_CLUMP_MASK_ADDENDS(uint32_t bytes)
+{
+    return bytes >> GEN_INC_SHIFT;
+}
 
-#define COMPUTE_CLUMP_MASK(gen, msk)        (((gen & GEN_CLAMP) - msk) & GEN_MASK)
-#define COMPUTE_CLUMP_ADDENDS(gen, msk)     MAKE_CLUMP_MASK_ADDENDS(COMPUTE_CLUMP_MASK(gen, msk))
-#define COMPUTE_AGED_CLUMPS(gen, msk)       APPLY_CLUMP_ADDENDS(gen, COMPUTE_CLUMP_ADDENDS(gen, msk))
+static constexpr uint32_t APPLY_CLUMP_ADDENDS(uint32_t gen, uint32_t addend)
+{
+    return gen + addend;
+}
+
+static constexpr uint32_t COMPUTE_CLUMP_MASK(uint32_t gen, uint32_t msk)
+{
+    return ((gen & GEN_CLAMP) - msk) & GEN_MASK;
+}
+
+static constexpr uint32_t COMPUTE_CLUMP_ADDENDS(uint32_t gen, uint32_t msk)
+{
+    return MAKE_CLUMP_MASK_ADDENDS(COMPUTE_CLUMP_MASK(gen, msk));
+}
+
+static constexpr uint32_t COMPUTE_AGED_CLUMPS(uint32_t gen, uint32_t msk)
+{
+    return APPLY_CLUMP_ADDENDS(gen, COMPUTE_CLUMP_ADDENDS(gen, msk));
+}
+
 
 /*--------------------------------------------------------------------------*/
 
@@ -271,7 +293,8 @@ struct ScanQNode
  * Number of elements in a type inclusion map.
  *
  */
-#define INCLUSION_MAP_SIZE (HANDLE_MAX_INTERNAL_TYPES + 1)
+
+static constexpr uint32_t INCLUSION_MAP_SIZE = HANDLE_MAX_INTERNAL_TYPES + 1;
 
 
 /*

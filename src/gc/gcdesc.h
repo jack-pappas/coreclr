@@ -256,8 +256,7 @@ private:
 
 };
 
-#define MAX_SIZE_FOR_VALUECLASS_IN_ARRAY 0xffff
-#define MAX_PTRS_FOR_VALUECLASSS_IN_ARRAY 0xffff
-
+static constexpr uint16_t MAX_SIZE_FOR_VALUECLASS_IN_ARRAY = 0xffff;
+static constexpr uint16_t MAX_PTRS_FOR_VALUECLASSS_IN_ARRAY = 0xffff;
 
 #endif // _GCDESC_H_

@@ -8,7 +8,7 @@
 #include "gcinterface.h"
 #include "gc.h"
 
-#define WRITE_WATCH_UNIT_SIZE 0x1000
+static constexpr uint32_t WRITE_WATCH_UNIT_SIZE = 0x1000u;
 
 #ifdef FEATURE_USE_SOFTWARE_WRITE_WATCH_FOR_GC_HEAP
 #ifndef DACCESS_COMPILE

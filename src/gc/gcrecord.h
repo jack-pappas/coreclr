@@ -16,9 +16,10 @@ Module Name:
 //#define max_generation 2
 
 // We pack the dynamic tuning for deciding which gen to condemn in a uint32_t.
-// We assume that 2 bits are enough to represent the generation. 
-#define bits_generation 2
-#define generation_mask (~(~0u << bits_generation))
+// We assume that 2 bits are enough to represent the generation.
+static constexpr uint32_t bits_generation = 2u;
+static constexpr uint32_t generation_mask = (~(~0u << bits_generation));
+
 //=======================note !!!===================================//
 // If you add stuff to this enum, remember to update total_gen_reasons
 // and record_condemn_gen_reasons below.
@@ -313,7 +314,8 @@ static gc_mechanism_descr gc_mechanisms_descr[max_mechanism_per_heap] =
 
 int index_of_set_bit (size_t power2);
 
-#define mechanism_mask (1 << (sizeof (uint32_t) * 8 - 1))
+static constexpr uint32_t mechanism_mask = (1 << (sizeof (uint32_t) * 8 - 1));
+
 // interesting per heap data we want to record for each GC.
 class gc_history_per_heap
 {

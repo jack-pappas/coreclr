@@ -404,7 +404,7 @@ typedef DPTR(uint8_t)   PTR_uint8_t;
 
 // -----------------------------------------------------------------------------------------------------------
 
-#define DATA_ALIGNMENT sizeof(uintptr_t)
+static constexpr size_t DATA_ALIGNMENT = sizeof(uintptr_t);
 #define RAW_KEYWORD(x) x
 #define DECLSPEC_ALIGN(x)   __declspec(align(x))
 #ifndef _ASSERTE
@@ -466,7 +466,7 @@ namespace ETW
     } GC_ROOT_KIND;
 };
 
-inline bool FitsInU1(uint64_t val)
+static constexpr bool FitsInU1(uint64_t val)
 {
     return val == (uint64_t)(uint8_t)val;
 }

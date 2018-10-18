@@ -34,32 +34,35 @@ BOOL bgc_heap_walk_for_etw_p = FALSE;
 
 #define MAX_PTR ((uint8_t*)(~(ptrdiff_t)0))
 
-#ifdef SERVER_GC
-#define partial_size_th 100
-#define num_partial_refs 64
-#else //SERVER_GC
-#define partial_size_th 100
-#define num_partial_refs 32
-#endif //SERVER_GC
+static constexpr uint32_t partial_size_th = 100u;
 
-#define demotion_plug_len_th (6*1024*1024)
+static constexpr uint32_t num_partial_refs =
+ #ifdef SERVER_GC
+ 64u;
+ #else  //SERVER_GC
+ 32u;
+ #endif //SERVER_GC
 
-#ifdef BIT64
-#define MARK_STACK_INITIAL_LENGTH 1024
-#else
-#define MARK_STACK_INITIAL_LENGTH 128
-#endif // BIT64
+static constexpr uint32_t demotion_plug_len_th = (6*1024*1024);
 
-#define LOH_PIN_QUEUE_LENGTH 100
-#define LOH_PIN_DECAY 10
+static constexpr uint32_t MARK_STACK_INITIAL_LENGTH =
+ #ifdef BIT64
+ 1024u;
+ #else  // BIT64
+ 128u;
+ #endif // BIT64
 
-#ifdef BIT64
-// Right now we support maximum 1024 procs - meaning that we will create at most
-// that many GC threads and GC heaps. 
-#define MAX_SUPPORTED_CPUS 1024
-#else
-#define MAX_SUPPORTED_CPUS 64
-#endif // BIT64
+static constexpr uint32_t LOH_PIN_QUEUE_LENGTH = 100u;
+static constexpr uint32_t LOH_PIN_DECAY = 10u;
+
+static constexpr uint32_t MAX_SUPPORTED_CPUS =
+ #ifdef BIT64
+ // Right now we support maximum 1024 procs - meaning that we will create at most
+ // that many GC threads and GC heaps. 
+ 1024u;
+ #else
+ 64u;
+ #endif // BIT64
 
 #ifdef GC_CONFIG_DRIVEN
 int compact_ratio = 0;

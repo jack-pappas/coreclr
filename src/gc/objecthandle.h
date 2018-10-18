@@ -45,15 +45,19 @@ struct HandleTableBucket
 /*
  * Type mask definitions for HNDTYPE_VARIABLE handles.
  */
-#define VHT_WEAK_SHORT              (0x00000100)  // avoid using low byte so we don't overlap normal types
-#define VHT_WEAK_LONG               (0x00000200)  // avoid using low byte so we don't overlap normal types
-#define VHT_STRONG                  (0x00000400)  // avoid using low byte so we don't overlap normal types
-#define VHT_PINNED                  (0x00000800)  // avoid using low byte so we don't overlap normal types
+static constexpr uintptr_t VHT_WEAK_SHORT = 0x00000100u;  // avoid using low byte so we don't overlap normal types
+static constexpr uintptr_t VHT_WEAK_LONG =  0x00000200u;  // avoid using low byte so we don't overlap normal types
+static constexpr uintptr_t VHT_STRONG =     0x00000400u;  // avoid using low byte so we don't overlap normal types
+static constexpr uintptr_t VHT_PINNED =     0x00000800u;  // avoid using low byte so we don't overlap normal types
 
-#define IS_VALID_VHT_VALUE(flag)   ((flag == VHT_WEAK_SHORT) || \
-                                    (flag == VHT_WEAK_LONG)  || \
-                                    (flag == VHT_STRONG)     || \
-                                    (flag == VHT_PINNED))
+static constexpr bool IS_VALID_VHT_VALUE(uintptr_t flag)
+{
+    return
+        (flag == VHT_WEAK_SHORT) ||
+        (flag == VHT_WEAK_LONG)  ||
+        (flag == VHT_STRONG)     ||
+        (flag == VHT_PINNED);
+}
 
 GC_DAC_VISIBLE
 OBJECTREF GetDependentHandleSecondary(OBJECTHANDLE handle);

@@ -177,15 +177,15 @@ struct segment_info
 #define GC_PROFILING       //Turn on profiling
 #endif // PROFILING_SUPPORTED
 
-#define LARGE_OBJECT_SIZE ((size_t)(85000))
+static constexpr size_t LARGE_OBJECT_SIZE = 85000u;
 
 // The minimum size of an object is three pointers wide: one for the syncblock,
 // one for the object header, and one for the first field in the object.
-#define min_obj_size ((sizeof(uint8_t*) + sizeof(uintptr_t) + sizeof(size_t)))
+static constexpr size_t min_obj_size = sizeof(uint8_t*) + sizeof(uintptr_t) + sizeof(size_t);
 
 // The bit shift used to convert a memory address into an index into the
 // Software Write Watch table.
-#define SOFTWARE_WRITE_WATCH_AddressToTableByteIndexShift 0xc
+static constexpr uint8_t SOFTWARE_WRITE_WATCH_AddressToTableByteIndexShift = 0xc;
 
 class Object;
 class IGCHeap;
@@ -889,16 +889,15 @@ void updateGCShadow(Object** ptr, Object* val);
 #endif
 
 //constants for the flags parameter to the gc call back
-
-#define GC_CALL_INTERIOR            0x1
-#define GC_CALL_PINNED              0x2
-#define GC_CALL_CHECK_APP_DOMAIN    0x4
+static constexpr uint8_t GC_CALL_INTERIOR           = 0x1;
+static constexpr uint8_t GC_CALL_PINNED             = 0x2;
+static constexpr uint8_t GC_CALL_CHECK_APP_DOMAIN   = 0x4;
 
 //flags for IGCHeapAlloc(...)
-#define GC_ALLOC_FINALIZE 0x1
-#define GC_ALLOC_CONTAINS_REF 0x2
-#define GC_ALLOC_ALIGN8_BIAS 0x4
-#define GC_ALLOC_ALIGN8 0x8
+static constexpr uint8_t GC_ALLOC_FINALIZE = 0x1;
+static constexpr uint8_t GC_ALLOC_CONTAINS_REF = 0x2;
+static constexpr uint8_t GC_ALLOC_ALIGN8_BIAS = 0x4;
+static constexpr uint8_t GC_ALLOC_ALIGN8 = 0x8;
 
 #if defined(USE_CHECKED_OBJECTREFS) && !defined(_NOVM)
 #define OBJECTREF_TO_UNCHECKED_OBJECTREF(objref)    (*((_UNCHECKED_OBJECTREF*)&(objref)))

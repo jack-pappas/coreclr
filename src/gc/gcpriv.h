@@ -168,30 +168,32 @@ void GCLogConfig (const char *fmt, ... );
 // For the bestfit algorithm when we relocate ephemeral generations into an 
 // existing gen2 segment.
 // We recorded sizes from 2^6, 2^7, 2^8...up to 2^30 (1GB). So that's 25 sizes total.
-#define MIN_INDEX_POWER2 6
+static constexpr uint32_t MIN_INDEX_POWER2 = 6u;
 
 #ifdef SERVER_GC
 
-#ifdef BIT64
-#define MAX_INDEX_POWER2 30
-#else
-#define MAX_INDEX_POWER2 26
-#endif  // BIT64
+static constexpr uint32_t MAX_INDEX_POWER2 =
+ #ifdef BIT64
+ 30u;
+ #else
+ 26u;
+ #endif  // BIT64
 
 #else //SERVER_GC
 
-#ifdef BIT64
-#define MAX_INDEX_POWER2 28
-#else
-#define MAX_INDEX_POWER2 24
-#endif  // BIT64
+static constexpr uint32_t MAX_INDEX_POWER2 =
+ #ifdef BIT64
+ 28u;
+ #else
+ 24u;
+ #endif  // BIT64
 
 #endif //SERVER_GC
 
-#define MAX_NUM_BUCKETS (MAX_INDEX_POWER2 - MIN_INDEX_POWER2 + 1)
+static constexpr uint32_t MAX_NUM_BUCKETS = (MAX_INDEX_POWER2 - MIN_INDEX_POWER2 + 1u);
 
-#define MAX_NUM_FREE_SPACES 200 
-#define MIN_NUM_FREE_SPACES 5 
+static constexpr uint32_t MAX_NUM_FREE_SPACES = 200u;
+static constexpr uint32_t MIN_NUM_FREE_SPACES = 5u;
 
 //Please leave these definitions intact.
 
@@ -229,9 +231,9 @@ void GCLogConfig (const char *fmt, ... );
 #endif //MULTIPLE_HEAPS
 
 //These constants are ordered
-const int policy_sweep = 0;
-const int policy_compact = 1;
-const int policy_expand  = 2;
+static constexpr int policy_sweep = 0;
+static constexpr int policy_compact = 1;
+static constexpr int policy_expand  = 2;
 
 #ifdef TRACE_GC
 #define SEG_REUSE_LOG_0 7
@@ -455,7 +457,7 @@ enum gc_type
     gc_type_max = 3
 };
 
-#define v_high_memory_load_th 97
+static constexpr uint32_t v_high_memory_load_th = 97u;
 
 //encapsulates the mechanism for the current gc
 class gc_mechanisms
@@ -630,7 +632,9 @@ typedef DPTR(class CFinalize)                  PTR_CFinalize;
 //generation free list. It is an array of free lists bucketed by size, starting at sizes lower than first_bucket_size 
 //and doubling each time. The last bucket (index == num_buckets) is for largest sizes with no limit
 
-#define MAX_BUCKET_COUNT (13)//Max number of buckets for the small generations. 
+//Max number of buckets for the small generations. 
+static constexpr uint32_t MAX_BUCKET_COUNT = 13u;
+
 class alloc_list 
 {
     uint8_t* head;
@@ -718,8 +722,8 @@ public:
     void commit_alloc_list_changes();
 };
 
-#define NUM_GEN_POWER2 (20)
-#define BASE_GEN_SIZE (1*512)
+static constexpr uint32_t NUM_GEN_POWER2 = 20u;
+static constexpr uint32_t BASE_GEN_SIZE = 1u*512u;
 
 // group the frequently used ones together (need intrumentation on accessors)
 class generation
@@ -826,7 +830,7 @@ public:
     static_data* sdata;
 };
 
-#define ro_in_entry 0x1
+static constexpr uint8_t ro_in_entry = 0x1;
 
 #ifdef SEG_MAPPING_TABLE
 // Note that I am storing both h0 and seg0, even though in Server GC you can get to 
@@ -856,16 +860,16 @@ struct seg_mapping
 
 // alignment helpers
 //Alignment constant for allocation
-#define ALIGNCONST (DATA_ALIGNMENT-1)
+static constexpr size_t ALIGNCONST = DATA_ALIGNMENT-1;
 
-inline
+static constexpr
 size_t Align (size_t nbytes, int alignment=ALIGNCONST)
 {
     return (nbytes + alignment) & ~alignment;
 }
 
 //return alignment constant for small object heap vs large object heap
-inline
+static constexpr
 int get_alignment_constant (BOOL small_object_p)
 {
 #ifdef FEATURE_STRUCTALIGN
@@ -964,7 +968,7 @@ struct spinlock_info
     EEThreadId thread_id;
 };
 
-const unsigned HS_CACHE_LINE_SIZE = 128;
+static constexpr uint32_t HS_CACHE_LINE_SIZE = 128u;
 
 #ifdef SNOOP_STATS
 struct snoop_stats_data
@@ -3440,17 +3444,22 @@ protected:
 
 #endif //SYNCHRONIZATION_STATS
 
-#define NUM_LOH_ALIST (7)
-#define BASE_LOH_ALIST (64*1024)
+static constexpr uint32_t NUM_LOH_ALIST = 7;
+
+static constexpr uint32_t BASE_LOH_ALIST = (64*1024);
+
     PER_HEAP 
     alloc_list loh_alloc_list[NUM_LOH_ALIST-1];
 
-#define NUM_GEN2_ALIST (12)
-#ifdef BIT64
-#define BASE_GEN2_ALIST (1*256)
-#else
-#define BASE_GEN2_ALIST (1*128)
-#endif // BIT64
+static constexpr uint32_t NUM_GEN2_ALIST = 12;
+
+static constexpr uint32_t BASE_GEN2_ALIST =
+ #ifdef BIT64
+ (1*256);
+ #else
+ (1*128);
+ #endif // BIT64
+ 
     PER_HEAP
     alloc_list gen2_alloc_list[NUM_GEN2_ALIST-1];
 
@@ -4079,10 +4088,10 @@ size_t generation_unusable_fragmentation (generation* inst)
                     (1.0f-generation_allocator_efficiency(inst))*generation_free_list_space (inst));
 }
 
-#define plug_skew           sizeof(ObjHeader)
+static constexpr size_t plug_skew = sizeof(ObjHeader);
 // We always use USE_PADDING_TAIL when fitting so items on the free list should be
 // twice the min_obj_size.
-#define min_free_list       (2*min_obj_size)
+static constexpr size_t min_free_list = (2*min_obj_size);
 struct plug
 {
     uint8_t *  skew[plug_skew / sizeof(uint8_t *)];
@@ -4130,7 +4139,7 @@ struct gap_reloc_pair
     pair        m_pair;
 };
 
-#define min_pre_pin_obj_size (sizeof (gap_reloc_pair) + min_obj_size)
+static constexpr size_t min_pre_pin_obj_size = (sizeof (gap_reloc_pair) + min_obj_size);
 
 struct DECLSPEC_ALIGN(8) aligned_plug_and_gap
 {
@@ -4150,19 +4159,20 @@ struct loh_padding_obj
     ptrdiff_t   reloc;
     plug        m_plug;
 };
-#define loh_padding_obj_size (sizeof(loh_padding_obj))
+
+static constexpr size_t loh_padding_obj_size = (sizeof(loh_padding_obj));
 
 //flags description
-#define heap_segment_flags_readonly     1
-#define heap_segment_flags_inrange      2
-#define heap_segment_flags_unmappable   4
-#define heap_segment_flags_loh          8
+static constexpr uint32_t heap_segment_flags_readonly =         1u;
+static constexpr uint32_t heap_segment_flags_inrange =          2u;
+static constexpr uint32_t heap_segment_flags_unmappable =       4u;
+static constexpr uint32_t heap_segment_flags_loh =              8u;
 #ifdef BACKGROUND_GC
-#define heap_segment_flags_swept        16
-#define heap_segment_flags_decommitted  32
-#define heap_segment_flags_ma_committed 64
+static constexpr uint32_t heap_segment_flags_swept =            16u;
+static constexpr uint32_t heap_segment_flags_decommitted  =     32u;
+static constexpr uint32_t heap_segment_flags_ma_committed =     64u;
 // for segments whose mark array is only partially committed.
-#define heap_segment_flags_ma_pcommitted 128
+static constexpr uint32_t heap_segment_flags_ma_pcommitted =    128u;
 #endif //BACKGROUND_GC
 
 //need to be careful to keep enough pad items to fit a relocation node
@@ -4312,34 +4322,37 @@ dynamic_data* gc_heap::dynamic_data_of (int gen_number)
     return &dynamic_data_table [ gen_number ];
 }
 
-#define GC_PAGE_SIZE 0x1000
 
-#define card_word_width ((size_t)32)
+static constexpr size_t GC_PAGE_SIZE = 0x1000u;
+
+static constexpr size_t card_word_width = 32;
 
 //
 // The value of card_size is determined empirically according to the average size of an object
 // In the code we also rely on the assumption that one card_table entry (uint32_t) covers an entire os page
 //
-#if defined (BIT64)
-#define card_size ((size_t)(2*GC_PAGE_SIZE/card_word_width))
-#else
-#define card_size ((size_t)(GC_PAGE_SIZE/card_word_width))
-#endif // BIT64
+static constexpr size_t card_size =
+ #ifdef BIT64
+ 2*GC_PAGE_SIZE/card_word_width;
+ #else
+ GC_PAGE_SIZE/card_word_width;
+ #endif // BIT64
 
 // Returns the index of the card word a card is in
-inline
+static constexpr
 size_t card_word (size_t card)
 {
     return card / card_word_width;
 }
 
 // Returns the index of a card within its card word
-inline
+static constexpr
 unsigned card_bit (size_t card)
 {
     return (unsigned)(card % card_word_width);
 }
 
+/*static constexpr*/
 inline
 size_t gcard_of (uint8_t* object)
 {

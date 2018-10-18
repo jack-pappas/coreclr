@@ -13,8 +13,8 @@
 // Bits stolen from the sync block index that the GC/HandleTable knows about (currently these are at the same
 // positions as the mainline runtime but we can change this below when it becomes apparent how Redhawk will
 // handle sync blocks).
-#define BIT_SBLK_GC_RESERVE                 0x20000000
-#define BIT_SBLK_FINALIZER_RUN              0x40000000
+static constexpr uint32_t BIT_SBLK_GC_RESERVE =     0x20000000;
+static constexpr uint32_t BIT_SBLK_FINALIZER_RUN =  0x40000000;
 
 // The sync block index header (small structure that immediately precedes every object in the GC heap). Only
 // the GC uses this so far, and only to store a couple of bits of information.
@@ -36,12 +36,12 @@ public:
 
 static_assert(sizeof(ObjHeader) == sizeof(uintptr_t), "this assumption is made by the VM!");
 
-#define MTFlag_ContainsPointers     0x0100
-#define MTFlag_HasCriticalFinalizer 0x0800
-#define MTFlag_HasFinalizer         0x0010
-#define MTFlag_IsArray              0x0008
-#define MTFlag_Collectible          0x1000
-#define MTFlag_HasComponentSize     0x8000
+static constexpr uint16_t MTFlag_ContainsPointers =         0x0100;
+static constexpr uint16_t MTFlag_HasCriticalFinalizer =     0x0800;
+static constexpr uint16_t MTFlag_HasFinalizer =             0x0010;
+static constexpr uint16_t MTFlag_IsArray =                  0x0008;
+static constexpr uint16_t MTFlag_Collectible =              0x1000;
+static constexpr uint16_t MTFlag_HasComponentSize =         0x8000;
 
 class MethodTable
 {
@@ -149,7 +149,8 @@ public:
         m_pMethTab = pMT;
     }
 };
-#define MIN_OBJECT_SIZE     (2*sizeof(uint8_t*) + sizeof(ObjHeader))
+
+static constexpr size_t MIN_OBJECT_SIZE = 2*sizeof(uint8_t*) + sizeof(ObjHeader);
 
 class ArrayBase : public Object
 {

@@ -100,7 +100,8 @@ class Object;
 class IGCHeapInternal;
 
 /* misc defines */
-#define LARGE_OBJECT_SIZE ((size_t)(85000))
+
+#define LARGE_OBJECT_SIZE ((size_t)85000)
 #define max_generation 2
 
 #ifdef GC_CONFIG_DRIVEN

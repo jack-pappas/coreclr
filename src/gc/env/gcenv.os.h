@@ -18,7 +18,7 @@
 #undef Sleep
 #endif // Sleep
 
-#define NUMA_NODE_UNDEFINED UINT32_MAX
+static constexpr uint32_t NUMA_NODE_UNDEFINED = UINT32_MAX;
 
 // Critical section used by the GC
 class CLRCriticalSection

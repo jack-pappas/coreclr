@@ -29,8 +29,8 @@
 /*
  * handle flags used by HndCreateHandleTable
  */
-#define HNDF_NORMAL         (0x00)
-#define HNDF_EXTRAINFO      (0x01)
+static constexpr uint8_t HNDF_NORMAL =      0x00;
+static constexpr uint8_t HNDF_EXTRAINFO =   0x01;
 
 /*
  * handle to handle table
@@ -111,10 +111,14 @@ void HndEnumHandles(HHANDLETABLE hTable, const uint32_t *puType, uint32_t uTypeC
 /*
  * GC-time handle scanning
  */
-#define HNDGCF_NORMAL       (0x00000000)    // normal scan
-#define HNDGCF_AGE          (0x00000001)    // age handles while scanning
-#define HNDGCF_ASYNC        (0x00000002)    // drop the table lock while scanning
-#define HNDGCF_EXTRAINFO    (0x00000004)    // iterate per-handle data while scanning
+// normal scan
+static constexpr uint32_t HNDGCF_NORMAL =       0x00000000u;
+// age handles while scanning
+static constexpr uint32_t HNDGCF_AGE =          0x00000001u;
+// drop the table lock while scanning
+static constexpr uint32_t HNDGCF_ASYNC =        0x00000002u;
+// iterate per-handle data while scanning
+static constexpr uint32_t HNDGCF_EXTRAINFO =    0x00000004u;
 
 GC_DAC_VISIBLE_NO_MANGLE
 void            HndScanHandlesForGC(HHANDLETABLE hTable,
